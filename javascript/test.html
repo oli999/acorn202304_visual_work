@@ -7,13 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-    <p>p1</p>
-    <p>p2</p>
-    <p>p3</p>
-    <p>p4</p>
-    <p>p5</p>
     <script>
-        
+    
+        let members=[];
+
+        let mem1={num:1, name:"김구라", addr:"노량진"};
+        let mem2={num:2, name:"해골", addr:"행신동"};
+        let mem3={};
+        mem3.num=3;
+        mem3.name="원숭이";
+        mem3.addr="동물원";
+
+        members.push(mem1);
+        members.push(mem2);
+        members.push(mem3);
+
+        for(let i=0; i<members.length; i++){
+            let tmp=members[i];
+            console.log("번호:"+tmp.num+", 이름:"+tmp.name+", 주소:"+tmp.addr);
+        }
     </script>
 </body>
 </html>
