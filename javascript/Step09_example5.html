@@ -54,6 +54,20 @@
         const fireSound=new Audio("sounds/fire.wav");
         const dieSound=new Audio("sounds/birddie.mp3");
 
+        //풍선 이미지를 저장할 배열
+        const bubbleImgs=[];
+        //반복문 돌면서 
+        for(let i=0; i<6; i++){
+            //풍선 이미지를 로딩해서 
+            let tmp=new Image();
+            tmp.src="images/b"+i+".png";
+            //배열에 누적 시키기
+            bubbleImgs.push(tmp);
+        }
+
+        //풍선의 정보를 저장할 배열
+        const bubbles=[];
+        
         setInterval(()=>{
             //함수가 호출될때 마다 count 를 1 씩 증가 시킨다 
             count++;
@@ -72,6 +86,21 @@
             }
             //토끼 그리기
             context.drawImage(rabbitImgs[rabbitIndex], rabbitX-50, rabbitY-50, 100, 100);
+            //풍선 그리기
+            for(let i=0; i<bubbles.length; i++){
+                //i번째 풍선 정보를 가지고 있는 object 를 참조해서
+                let tmp=bubbles[i];
+                //object 안에 있는 정보를 바탕으로 풍선을 그린다.
+                context.drawImage(bubbleImgs[tmp.index], tmp.x-25, tmp.y-25, 50, 50);
+            }
+            //풍선 움직이기
+            for(let i=0; i<bubbles.length; i++){
+                let tmp=bubbles[i];
+                //각각의 풍선이 가지고 있는 speedX, speedY 값 만큼 x,y 좌표를 변화 시킨다.
+                tmp.x += tmp.speedX;
+                tmp.y += tmp.speedY;
+            }
+
             //스나이프 그리기
             context.drawImage(snipeImg, snipeX-50, snipeY-50, 100, 100);
 
@@ -124,6 +153,19 @@
             if(isRabbitDie){
                 dieSound.currentTime=0;
                 dieSound.play();
+                //여기서 풍선 6개 만들기 
+                for(let i=0; i<6; i++){
+                    //새로운 object를 하나 만들어서 
+                    let tmp={};
+                    //풍선하나의 정보를 담고 
+                    tmp.x=rabbitX;
+                    tmp.y=rabbitY;
+                    tmp.index=i;
+                    tmp.speedX=Math.random()*20-10;
+                    tmp.speedY=Math.random()*20-10;
+                    //배열에 누적 시키기
+                    bubbles.push(tmp);
+                }
             }
 
         });
