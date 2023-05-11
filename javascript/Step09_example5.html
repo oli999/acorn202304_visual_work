@@ -13,9 +13,12 @@
 </head>
 <body>
     <h1>canvas 요소 활용해 보기</h1>
+    <p> 잡은 토끼의 갯수 : <strong id="point">0</strong></p>
     <!-- canvas 요소는 width 와 height 를 속성으로 직접 지정할수 있다. -->
     <canvas id="myCanvas" width="800" height="500"></canvas>
     <script> 
+        //잡은 토끼의 갯수를 저장할 변수 선언하고 초기값 0  대입
+        let point=0;
 
         //canvas 요소의 참조값 
         const canvas=document.querySelector("#myCanvas");
@@ -67,15 +70,43 @@
 
         //풍선의 정보를 저장할 배열
         const bubbles=[];
+
+        //글자의 크기, 글꼴
+        context.font="20px consolas";
+        //글자의 색상
+        context.fillStyle="yellow";
+
+        //시계 다이얼 이미지
+        const dialImg=new Image();
+        dialImg.src="images/dial.png";
+        //초침 이미지
+        const secImg=new Image();
+        secImg.src="images/clock_sec.png";
+        //시계를 그릴 좌표
+        const clockX=700;
+        const clockY=100;
         
         setInterval(()=>{
             //함수가 호출될때 마다 count 를 1 씩 증가 시킨다 
             count++;
-
             //여기 함수 내부는 1/100 초 마다 한번씩 실행된다.
             //context.clearRect(0, 0, 800, 500);
             //배경이미지를 canvas 의 크기에 맞게 그린다.
             context.drawImage(backImg, 0, 0, 800, 500);
+
+            //현재 context 의 정상 상태(변화를 가하지 않은 상태)를 저장한다.
+            context.save();
+            //시계를 그릴 좌표로 평행 이동한다.
+            context.translate(clockX, clockY);
+            //시계를 원점에 그리기
+            context.drawImage(dialImg, 0-100, 0-100, 200, 200);
+            //테스트로 초침을 그리기 전에 context 를 30 도 회전해서 그려보기
+            context.rotate(count*Math.PI/180);
+            //초침 그리기(시계 중심 좌표를 기준으로 그려본다)
+            context.drawImage(secImg, 0-4, 0-90, 8, 90);
+
+            //다른 그림에 영향이 가지 않도록 저장했던 정상상태로 context 를 되돌린다.
+            context.restore();
 
             //총알 구멍 이미지를 반복문 돌면서 모두 그린다.
             for(let i=0; i<holes.length; i++){
@@ -99,10 +130,27 @@
                 //각각의 풍선이 가지고 있는 speedX, speedY 값 만큼 x,y 좌표를 변화 시킨다.
                 tmp.x += tmp.speedX;
                 tmp.y += tmp.speedY;
+                //위에서 움직인 직후 풍선이 화면을 벗어 났는지 판별해서
+                let isOut = tmp.x<-25 || tmp.x>825 || tmp.y<-25 || tmp.y>525;
+                //만일 벗어 났다면
+                if(isOut){
+                    tmp.isOut=true;
+                }
+            }
+            //풍선 체크하기 (화면을 벗어난 풍선은 제거하기)
+            for(let i=0; i<bubbles.length; i++){
+                let tmp=bubbles[i];
+                //만일 i 번째 풍선이 화면을 벗어 났다면 
+                if(tmp.isOut){
+                    //bubbles 배열에서 i 번째 방에서 부터 1개 잘라내기(삭제하기)
+                    bubbles.splice(i, 1);
+                }
             }
 
             //스나이프 그리기
             context.drawImage(snipeImg, snipeX-50, snipeY-50, 100, 100);
+            //글짜 출력하기 .fillText(글내용, 좌하단의 x, 좌하단의 y)
+            context.fillText("Point : "+point, 10, 30);
 
             if(count%20 == 0){
                 //토끼 이미지 인덱스 1 증가 시키기
@@ -161,11 +209,30 @@
                     tmp.x=rabbitX;
                     tmp.y=rabbitY;
                     tmp.index=i;
-                    tmp.speedX=Math.random()*20-10;
-                    tmp.speedY=Math.random()*20-10;
+                    tmp.speedX=Math.random()*10-5;
+                    tmp.speedY=Math.random()*10-5;
+                    tmp.isOut=false; //화면을 벗어 났는지여부
+                    //위와 같은 구조의 object 를 아래처럼 작성할수도 있다.
+                    let tmp2={
+                        x:rabbitX,
+                        y:rabbitY,
+                        index:i,
+                        speedX:Math.random()*10-5,
+                        speedY:Math.random()*10-5,
+                        isOut:false
+                    };
+
                     //배열에 누적 시키기
                     bubbles.push(tmp);
                 }
+
+                //총에 맞았으니 토끼를 랜덤한 위치로 움직이게 하기
+                rabbitX = Math.random()*700 + 50;
+                rabbitY = Math.random()*400 + 50;
+                //토끼 잡은 갯수 증가 시키기
+                point++;
+                //strong 요소의 innerText 로 출력하기
+                document.querySelector("#point").innerText=point;
             }
 
         });
