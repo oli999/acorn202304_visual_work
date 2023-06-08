@@ -57,16 +57,34 @@
                     <label class="form-check-label" for="allowAll">전체 동의</label>
                 </div>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" value="yes" name="allowEmail" id="allowEmail">
+                    <input class="form-check-input allow" type="checkbox" value="yes" name="allowEmail" id="allowEmail">
                     <label class="form-check-label" for="allowEmail">이메일 수신여부</label>
                 </div>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" value="yes" name="allowMessage" id="allowMessage">
+                    <input class="form-check-input allow" type="checkbox" value="yes" name="allowMessage" id="allowMessage">
                     <label class="form-check-label" for="allowMessage">광고성 문자 수신여부</label>
                 </div>
             </fieldset>
             <button class="btn btn-outline-primary" type="submit">가입</button>
         </form>
     </div>
+    <script>
+        document.querySelector("#allowAll").addEventListener("change", (e)=>{
+            //모두 동의 체크 여부를 알아낸다.
+            const isChecked=e.target.checked;
+            //클래스가 allow 인 모든 요소의 참조값을 배열로 얻어내기
+            const allows=document.querySelectorAll(".allow");
+            //반복문 돌면서 
+            // for(let i=0; i<allows.length; i++){
+            //     //모든 checkbox 의 check 상태를 바꿔주기 
+            //     allows[i].checked=isChecked;
+            // }
+
+            //반복문 대신에 forEach() 함수도 활용해 보기 
+            allows.forEach((item)=>{
+                item.checked=isChecked;
+            });
+        });
+    </script>
 </body>
 </html>
