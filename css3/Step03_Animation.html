@@ -9,11 +9,12 @@
             border: 1px solid red;
             border-radius: 50%;
         }
-
+        /* 페이지 로딩시점에 한번만 수행된다. */
         #kim{
             animation: rotateAni 3s linear;
         }
 
+        /* 마우스가 hover 될때 마다 수행된다. */
         #kim2:hover{
             /* animation: rotateAni 3s linear; */
             /* 위는 아래의 3줄을 줄인 표현식이다. */
@@ -21,7 +22,11 @@
             animation-duration: 3s;
             animation-timing-function: linear;
         }
-
+        /* 
+            rotate 클래스가 추가되는 시점에 수행된다.
+            추가 될때마다 여러번 수행하고 싶으면 애니메이션이 
+            끝난 시점에 rotate 클래스를 제거를 해 주어야 된다.
+        */
         .rotate{
             animation: rotateAni 3s linear;
         }
