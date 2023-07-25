@@ -73,8 +73,8 @@
     <script>
         //n 각형의 폭을 함수에 전달하면 div 를 배치할때 rotateY 값과 translateZ 가 Object 로 리턴되는 함수 
         function getAngleNtz(n, width) {
-            var angle = Math.round(360 / n);
-            var tz = Math.round((width / 2) / Math.tan((angle * Math.PI) / (2 * 180)));
+            var angle = 360 / n;
+            var tz = (width / 2) / Math.tan((angle * Math.PI) / (2 * 180));
             var obj = {
                 angle: angle,
                 tz: tz
